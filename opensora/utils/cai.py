@@ -41,7 +41,11 @@ def init_inference_environment():
     Initialize the inference environment.
     """
     if is_distributed():
-        colossalai.launch_from_torch({})
+        # Use Gloo backend for RTX 5060 (sm_120) compatibility
+        # NCCL doesn't have sm_120 kernels in PyTorch 2.6.0
+        import os
+        backend = os.environ.get('DIST_BACKEND', 'gloo')  # Default to gloo for sm_120 compatibility
+        colossalai.launch_from_torch(backend=backend)
         coordinator = DistCoordinator()
         enable_sequence_parallelism = coordinator.world_size > 1
         if enable_sequence_parallelism:

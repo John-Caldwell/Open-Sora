@@ -13,8 +13,14 @@ from colossalai.shardformer.policies.base_policy import (
     ModulePolicyDescription, Policy, SubModuleReplacementDescription)
 from colossalai.shardformer.shard import ShardConfig
 from einops import rearrange
-from flash_attn.flash_attn_interface import (_flash_attn_backward,
-                                             _flash_attn_forward)
+try:
+    from flash_attn.flash_attn_interface import (_flash_attn_backward,
+                                                 _flash_attn_forward)
+    HAS_FLASH_ATTN = True
+except ImportError:
+    _flash_attn_backward = None
+    _flash_attn_forward = None
+    HAS_FLASH_ATTN = False
 from liger_kernel.ops.rope import LigerRopeFunction
 
 try:

@@ -1,6 +1,11 @@
 import torch
 from einops import rearrange
-from flash_attn import flash_attn_func as flash_attn_func_v2
+try:
+    from flash_attn import flash_attn_func as flash_attn_func_v2
+    HAS_FLASH_ATTN = True
+except ImportError:
+    flash_attn_func_v2 = None
+    HAS_FLASH_ATTN = False
 from liger_kernel.ops.rope import LigerRopeFunction
 from torch import Tensor
 from typing import Tuple
@@ -16,7 +21,13 @@ except:
 def flash_attn_func(q: Tensor, k: Tensor, v: Tensor) -> Tensor:
     if SUPPORT_FA3:
         return flash_attn_func_v3(q, k, v)[0]
-    return flash_attn_func_v2(q, k, v)
+    if HAS_FLASH_ATTN:
+        return flash_attn_func_v2(q, k, v)
+    # Fallback to standard PyTorch attention
+    import torch.nn.functional as F
+    scale = q.size(-1) ** -0.5
+    attn = F.softmax((q @ k.transpose(-2, -1)) * scale, dim=-1)
+    return attn @ v
 
 
 def attention(q: Tensor, k: Tensor, v: Tensor, pe) -> Tensor:
