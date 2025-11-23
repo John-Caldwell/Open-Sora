@@ -1,0 +1,133 @@
+[11/21/25 07:17:54] INFO     colossalai - colossalai - INFO:                    
+                             /home/lavadman/.local/lib/python3.12/site-packages/
+                             colossalai/initialize.py:75 launch                 
+                    INFO     colossalai - colossalai - INFO: Distributed        
+                             environment is initialized, world size: 1          
+[[34m2025-11-21 07:17:54[0m] Inference configuration:
+ {'ae': {'from_pretrained': './ckpts/hunyuan_vae.pt',
+        'in_channels': 3,
+        'latent_channels': 16,
+        'layers_per_block': 2,
+        'out_channels': 3,
+        'type': 'hunyuan_vae',
+        'use_spatial_tiling': True,
+        'use_temporal_tiling': False},
+ 'batch_size': 1,
+ 'clip': {'from_pretrained': './ckpts/openai/clip-vit-large-patch14',
+          'max_length': 77,
+          'type': 'text_embedder'},
+ 'cond_type': 't2v',
+ 'config_path': 'configs/diffusion/inference/256px.py',
+ 'dataset': {'type': 'text'},
+ 'dtype': 'bf16',
+ 'fps_save': 24,
+ 'model': {'axes_dim': [16, 56, 56],
+           'cond_embed': True,
+           'context_in_dim': 4096,
+           'depth': 19,
+           'depth_single_blocks': 38,
+           'from_pretrained': './ckpts/Open_Sora_v2.safetensors',
+           'fused_qkv': False,
+           'guidance_embed': False,
+           'hidden_size': 3072,
+           'in_channels': 64,
+           'mlp_ratio': 4.0,
+           'num_heads': 24,
+           'qkv_bias': True,
+           'theta': 10000,
+           'type': 'flux',
+           'use_liger_rope': True,
+           'vec_in_dim': 768},
+ 'motion_score': '4',
+ 'prompt': 'ocean waves crashing on a beach at sunset',
+ 'sampling_option': {'aspect_ratio': '16:9',
+                     'guidance': 7.5,
+                     'guidance_img': 3.0,
+                     'image_osci': True,
+                     'is_causal_vae': True,
+                     'method': 'i2v',
+                     'num_frames': 129,
+                     'num_steps': 50,
+                     'resolution': '256px',
+                     'scale_temporal_osci': True,
+                     'seed': None,
+                     'shift': True,
+                     'temporal_reduction': 4,
+                     'text_osci': True},
+ 'save_dir': 'samples',
+ 'seed': 42,
+ 't5': {'from_pretrained': './ckpts/google/t5-v1_1-xxl',
+        'max_length': 512,
+        'shardformer': True,
+        'type': 'text_embedder'}}
+[[34m2025-11-21 07:17:54[0m] Building dataset...
+[[34m2025-11-21 07:17:54[0m] Dataset contains 1 samples.
+[[34m2025-11-21 07:17:54[0m] Building models...
+[[34m2025-11-21 07:17:54[0m] Loading checkpoint from ./ckpts/Open_Sora_v2.safetensors
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/c/Repos/Open-Sora/scripts/diffusion/inference.py", line 245, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/lavadman/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/c/Repos/Open-Sora/scripts/diffusion/inference.py", line 127, in main
+[rank0]:     model, model_ae, model_t5, model_clip, optional_models = prepare_models(
+[rank0]:                                                              ^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/c/Repos/Open-Sora/opensora/utils/sampling.py", line 532, in prepare_models
+[rank0]:     model = build_module(
+[rank0]:             ^^^^^^^^^^^^^
+[rank0]:   File "/mnt/c/Repos/Open-Sora/opensora/registry.py", line 24, in build_module
+[rank0]:     return builder.build(cfg)
+[rank0]:            ^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/lavadman/.local/lib/python3.12/site-packages/mmengine/registry/registry.py", line 570, in build
+[rank0]:     return self.build_func(cfg, *args, **kwargs, registry=self)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/lavadman/.local/lib/python3.12/site-packages/mmengine/registry/build_functions.py", line 121, in build_from_cfg
+[rank0]:     obj = obj_cls(**args)  # type: ignore
+[rank0]:           ^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/c/Repos/Open-Sora/opensora/models/mmdit/model.py", line 296, in Flux
+[rank0]:     model = load_checkpoint(
+[rank0]:             ^^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/c/Repos/Open-Sora/opensora/utils/ckpt.py", line 136, in load_checkpoint
+[rank0]:     missing, unexpected = model.load_state_dict(ckpt, strict=strict)
+[rank0]:                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/lavadman/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+[rank0]:     raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+[rank0]: RuntimeError: Error(s) in loading state_dict for MMDiTModel:
+[rank0]: 	size mismatch for final_layer.linear.weight: copying a param with shape torch.Size([32, 1152]) from checkpoint, the shape in current model is torch.Size([64, 3072]).
+[rank0]: 	size mismatch for final_layer.linear.bias: copying a param with shape torch.Size([32]) from checkpoint, the shape in current model is torch.Size([64]).
+[rank0]:[W1121 07:17:55.685774478 ProcessGroupNCCL.cpp:1168] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
+E1121 07:18:27.021000 137952176332928 torch/distributed/elastic/multiprocessing/api.py:833] failed (exitcode: 1) local_rank: 0 (pid: 2235) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lavadman/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 905, in <module>
+    main()
+  File "/home/lavadman/.local/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 348, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/lavadman/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/home/lavadman/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/home/lavadman/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 133, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lavadman/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+scripts/diffusion/inference.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-11-21_07:18:27
+  host      : LavaDadPC.localdomain
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 2235)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

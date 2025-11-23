@@ -1,0 +1,70 @@
+---
+alwaysApply: true
+---
+---
+name: open-sora-best-practices.mdc
+description: Best practices and guidelines for Open Sora applications
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+- Utilize the built-in state management for efficient data handling.
+- Leverage the component library for consistent UI elements.
+- Implement lazy loading for components to enhance performance.
+- Use hooks for managing side effects and component lifecycle effectively.
+
+---
+name: react-best-practices.mdc
+description: Best practices for React applications
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+- Use functional components and hooks for cleaner code.
+- Keep components small and focused on a single responsibility.
+- Use PropTypes or TypeScript for type checking.
+- Optimize performance with React.memo and useCallback.
+
+---
+name: redux-best-practices.mdc
+description: Best practices for Redux state management
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+- Use Redux Toolkit for simplified store setup and reducers.
+- Normalize state shape to avoid deeply nested structures.
+- Use selectors for accessing state to improve performance.
+- Implement middleware for handling side effects (e.g., redux-thunk).
+
+---
+name: jest-best-practices.mdc
+description: Best practices for testing with Jest
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+- Write unit tests for all components and utility functions.
+- Use snapshot testing for React components to catch UI changes.
+- Mock external dependencies to isolate tests.
+- Organize tests in a dedicated folder structure for clarity.
+
+---
+name: eslint-best-practices.mdc
+description: Best practices for ESLint configuration and usage
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+- Use a shared ESLint configuration for consistency across the team.
+- Enable TypeScript support with appropriate plugins.
+- Set up rules for code style and best practices (e.g., no unused variables).
+- Regularly run ESLint as part of the development workflow.
+
+---
+name: testing-library-best-practices.mdc
+description: Best practices for testing with React Testing Library
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+- Focus on testing user interactions and behavior rather than implementation details.
+- Use queries that resemble how users find elements (e.g., getByRole).
+- Avoid using waitFor unless necessary; prefer synchronous queries.
+- Keep tests isolated and avoid dependencies on external state.
+
+Feel free to adjust the globs and practices based on your project's specific needs and structure.
